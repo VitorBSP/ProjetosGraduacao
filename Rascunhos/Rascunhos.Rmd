@@ -1,0 +1,153 @@
+---
+title: "Trabalho"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+paises <- c(15,25,2,13,22,1)
+numeros <- c("Noruega", "Alemanha", "Italia", "Polônia", "Tchecoslováquia", "USA")
+df <- as.data.frame(cbind(paises,numeros))
+```
+
+# Pré-questão
+
+Amostra:
+```{r}
+vetor1 <- c(10,12,15,25,33,32,35,21,12,23,21,40,
+38,32,23,25,13,21,20,35,36,39,23,21,
+23,22,20,15,51,32,32,30,21,12,18,16,
+29,23,25,26,34,38,34,33,20,32,20,23,
+23,28,30,30,32,39,12,13,18,17,23,23)
+```
+
+Amostra em rol:
+```{r}
+sort(vetor1, decreasing = F)
+
+```
+
+# Questão 1
+
+## Letra A
+
+Mínimo: `r min(vetor1)`.
+Máximo: `r min(vetor1)`.
+Amplitude: `r max(vetor1) - min(vetor1)`
+Soma da amostra: `r sum(vetor1)`
+Média: `r mean(vetor1)`
+Mediana: `r median(vetor1)`
+Moda: `r getmode(vetor1)`
+
+## Letra B
+```{r, include = FALSE}
+q1 <- vetor1[length(vetor1)/4*3]
+q2 <- vetor1[length(vetor1)/10*6]
+Q3 <- vetor1[length(vetor1)/100*90]
+```
+
+Quartil 3: `r min(vetor1)`.
+Decil 6: `r min(vetor1)`.
+Percentil 90: `r max(vetor1) - min(vetor1)`
+
+Formula:
+$$\frac{60}{tamanho\quad do\quad quantil}*(quantil\quad que\quad se\quad quer)$$
+
+## Letra C
+Desvio Padrão: `r sd(vetor1)`.
+Variância: `r var(vetor1)`.
+Coeficiente de variação: `r sd(vetor1)/mean(vetor1)*100`%
+
+## Letra D
+A distribuição de frequências por pontos fica:
+
+```{r, include = F}
+tabela <- data.frame(t(table(vetor1)))[,-1]
+tabela$dados <- as.numeric(levels(tabela$vetor1))
+#tabela <- tabela %>% 
+#  mutate(Fr = 100*Freq/sum(Freq),
+#         Fac = cumsum(Freq),
+#         Xi.Fi = dados*Freq)
+
+#tabela <- tabela %>% 
+#  mutate(Fr = 100*Freq/sum(Freq),
+#         Fac = cumsum(Freq),
+#         Xi.Fi = dados*Freq)
+names(tabela)<- c('vetor', 'Freq')
+tabela[,-3]
+
+
+```
+A distribuição de frequências por intervalos fica:
+
+
+
+```{r, include = F}
+vetor_1=cut(vetor1,breaks=c(10,15,20,25,30,35,52),
+                 include.lowest = TRUE)
+tabela1 <- data.frame(t(table(vetor_1)))[,-1]
+names(tabela1)<- c('vetor', 'Freq')
+
+tabela1
+```
+
+## Letra E
+
+Os gráficos, ficam:
+Gráfico por pontos:
+
+```{r}
+ggplot(tabela, aes(x= `vetor`, y = Freq)) + geom_bar(stat='identity')
+```
+
+Gráfico por intervalos:
+
+```{r}
+ggplot(tabela1, aes(x= `vetor`, y = Freq)) + geom_bar(stat='identity')
+```
+
+# Questão III
+
+```{r}
+tabela2 <- data.frame(t(table(df$numeros,df$paises))[,-1])
+r = is.data.frame(NULL) 
+i=1
+while(i < length(tabela2$Var1)){
+  if(tabela2[i,3] == 0){
+    r <- cbind(r,as.numeric(i))
+  }
+  i = i + 1
+}
+tabela2<-tabela2[-r,]
+tabela2<-tabela2[,-3]
+names(tabela2)<- c('Porcentagem', 'Paises')
+tabela2
+```
+
+Gráfico:
+```{r}
+ggplot(tabela2, aes(x= Paises, y = Porcentagem)) + geom_bar(stat='identity')
+
+```
+
+
+# Questão V:
+
+```{r}
+homens <- c(5,2,7,9,3,4,3,1,3,8)
+mulheres <- c(3,5,7,4,5,6,7,6,5,4)
+```
+
+Os homens ficam em média esperando `r mean(homens)`, com um máximo de `r max(homens)` e um mínimo de `r min(homens)`, assim a amplitude é `r max(homens) - min(homens) `, a mediana e a moda são: `r median(homens)` e `r getmode(homens)`, respectivamente. Sobre medidas de dispersão temos que a variância é `r var(homens)`, logo o desvio padrão é `r sd(homens)`, com o coeficiente de variação sendo `r sd(homens)/mean(homens)*100`%.
+
+Para as mulheres ficam em média esperando `r mean(mulheres)`, com um máximo de `r max(mulheres)` e um mínimo de `r min(mulheres)`, assim a amplitude é `r max(mulheres) - min(mulheres) `, a mediana e a moda são: `r median(mulheres)` e `r getmode(mulheres)`, respectivamente. Sobre medidas de dispersão temos que a variância é `r var(mulheres)`, logo o desvio padrão é `r sd(mulheres)`, com o coeficiente de variação sendo `r sd(mulheres)/mean(mulheres)*100`%.
+
+Assim notamos que a amostra das mulheres é mais homogênea e mais paciente em média, ao contrário da amostra dos homens, que o no pico espera mais que as mulheres porém em geral, não, sendo uma amostra muito heterogênea, como indica o coeficiente de variação e o desvio padrão.
