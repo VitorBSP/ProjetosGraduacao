@@ -234,3 +234,65 @@ for(i in 1:R){
 (b11 - a11)/R*somag2
 integrate(g2,a11,b11)
 
+######################LISTA 3#######################
+
+#7
+
+n7 <- c(30,100)
+R7<- 1000
+theta = 4
+e = 0.04
+cont7_400= cont7_1000 = 0
+
+m7_theta<-list(NULL, NULL, NULL, NULL)
+
+for(i in 1:R7){ 
+  for(j in n7){
+    v_theta <- rpois(j,theta)
+    m7_theta[[match(j,n7)]] <- c(m7_theta[[match(j,n7)]], mean(v_theta)) 
+    if(i < 400){
+      m7_theta[[match(j,n7) + 2]] <- c(m7_theta[[match(j,n7)]], mean(v_theta))
+    }
+  }
+} 
+
+cont = abs(m7_theta[[1]] - theta) > e 
+cont1 = abs(m7_theta[[2]] - theta) > e 
+cont2 = abs(m7_theta[[3]] - theta) > e 
+cont3 = abs(m7_theta[[4]] - theta) > e 
+
+p1 <- sum(cont)/R7
+p2 <- sum(cont1)/R7
+p3 <- sum(cont2)/400
+p4 <- sum(cont3)/400
+
+#8
+
+n8 <- c(30,100)
+R8<- 1000
+m8<-5
+sd8 <- 4
+e8= 0.04
+
+m8_normal<-list(NULL, NULL, NULL, NULL)
+
+for(i in 1:R8){ 
+  for(j in n8){
+    m_normal <- rnorm(j,m8,sd8)
+    m8_normal[[match(j,n8)]] <- c(m8_normal[[match(j,n8)]], mean(m_normal)) 
+    if(i < 400){
+      m8_normal[[match(j,n8) + 2]] <- c(m8_normal[[match(j,n8)]], mean(m_normal))
+    }
+  }
+} 
+
+cont = abs(m8_normal[[1]] - m8) > e8
+cont1 = abs(m8_normal[[2]] - m8) > e8
+cont2 = abs(m8_normal[[3]] - m8) > e8
+cont3 = abs(m8_normal[[4]] - m8) > e8
+
+p1 <- sum(cont)/R8
+p2 <- sum(cont1)/R8
+p3 <- sum(cont2)/400
+p4 <- sum(cont3)/400
+''
